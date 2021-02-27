@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-md-6 col-xs-12 mt-3">
+        <input type="text" id="search-text" class="form-control" name="searchText" aria-describedby="search-text"
+            [(ngModel)]="searchText" placeholder="Enter text to search" autofocus>
+    </div>
+    <div class="col-md-6 col-xs-12 mt-3">
+        <select [(ngModel)]="sortText" class="form-control">
+            <option value="">Choose record for sort</option>
+            <option value="name">name</option>
+            <option value="price">price</option>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-xs-12">
+        <div class="card flex-row flex-wrap mt-3"
+            *ngFor="let item of (items | filter: searchText | sortBy:'asc|desc':sortText) as result; let i=index"
+            [class.item-selected]="item === itemDetail" (click)="selectItem(item)">
+            <div *ngIf="result.length > 0; then show_items else show_not_found"></div>
+            <ng-template #show_items>
+                <div class="card-header border-0">
+                    <img class="card-img-left" src="{{item.thumbnailImage}}" alt="">
+                </div>
+                <div class="card-block px-2 pt-2 pb-2">
+                    <h4 class="card-title">{{item.name}}</h4>
+                    <p class="card-text">{{item.description}}</p>
+                </div>
+                <div class="card-button">
+                    <a class="btn btn-danger" (click)="open(DeleteModal,item.id)">Delete</a>
+                </div>
+            </ng-template>
+            <ng-template #show_not_found>
+                Not found record.
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<ng-template #DeleteModal let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmation</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">×</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <p>Are you sure to delete this?</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="d('Cross click')">Cancel</button>
+        <button type="button" class="btn btn-outline-dark" (click)="c('yes')">Yes</button>
+    </div>
+</ng-template>
