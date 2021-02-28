@@ -47,6 +47,13 @@ export class ShopService {
                 catchError(this.errorHandler)
             );
     }
+  
+    patchItem(item: Item, id: number) {
+        return this.http.patch(`${this.apiUrl}/products/${id}`, JSON.stringify(item), this.httpOptions)
+            .pipe(
+                catchError(this.errorHandler)
+            );
+    }
 
     updateItem(item: Item, id: number) {
         return this.http.put(`${this.apiUrl}/products/${id}`, JSON.stringify(item), this.httpOptions)
