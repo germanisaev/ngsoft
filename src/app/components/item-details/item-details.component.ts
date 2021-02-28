@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DoCheck, Input, 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Item } from 'src/app/shared/models/item.model';
+import { ShopService } from 'src/app/shared/services/shop.service';
+
 
 @Component({
   selector: 'app-item-details',
@@ -38,6 +40,7 @@ export class ItemDetailsComponent implements OnInit, DoCheck {
 
   constructor(
     private formBuilder: FormBuilder,
+    private _service: ShopService,
     private modalService: NgbModal,
     private ref: ChangeDetectorRef,
     private differs: KeyValueDiffers
@@ -59,6 +62,7 @@ export class ItemDetailsComponent implements OnInit, DoCheck {
 
   onCreate() {
     this.detailForm = this.formBuilder.group({
+      id: [0, Validators.required],
       name: ['', Validators.required],
       description: [''],
       price: [0, [Validators.required, Validators.min(1), Validators.pattern(this.numericNumberReg)]],
@@ -68,6 +72,7 @@ export class ItemDetailsComponent implements OnInit, DoCheck {
 
   getDataById(item: any) {
     this.detailForm.patchValue({
+      id: item.id,
       name: item.name,
       description: item.description,
       price: item.price,
@@ -87,6 +92,12 @@ export class ItemDetailsComponent implements OnInit, DoCheck {
 
     this.itemRef = this.detailForm.value;
 
+    setTimeout(() => {
+      this._service.patchItem(this.itemRef, this.item.id).subscribe(response => {
+        console.log(response);
+      });
+    }, 3000);
+    
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -105,3 +116,4 @@ export class ItemDetailsComponent implements OnInit, DoCheck {
   }
 
 }
+
