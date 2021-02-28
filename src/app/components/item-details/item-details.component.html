@@ -2,6 +2,7 @@
     <img class="card-img-top" src="{{item?.urlImage}}" alt="">
     <div class="card-body">
         <form [formGroup]="detailForm" (ngSubmit)="onSubmit(UpdateModal)">
+            <input [hidden]="true" formControlName="id">
             <input [hidden]="true" formControlName="urlImage">
             <div class="form-group">
                 <label for="name">Name</label>
@@ -16,7 +17,7 @@
                 <textarea formControlName="description" class="form-control"></textarea>
             </div>
             <div class="form-group">
-                <label for="price">Price</label>
+                <label for="price">Price (₪)</label>
                 <input type="text" formControlName="price" class="form-control"
                     [ngClass]="{ 'is-invalid': f.price.errors?.required || f.price.errors?.min || f.price.errors?.pattern && f.price.touched }" />
                 <div *ngIf="f.price.errors?.required && f.price.touched" class="error">
@@ -46,8 +47,7 @@
     <div class="modal-body">
         Thanks for updating the product {{itemRef?.name}}
     </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('ok')">Ok</button>
-    </div>
 </ng-template>
+
+
 
