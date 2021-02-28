@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Item } from 'src/app/shared/models/item.model';
+import { ShopService } from 'src/app/shared/services/shop.service';
 
 @Component({
   selector: 'app-item-list',
@@ -20,7 +21,7 @@ export class ItemListComponent implements OnInit {
   sortText: string = '';
   closeResult: string = '';
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal, private _service: ShopService,) { }
 
   ngOnInit(): void {
 
@@ -30,7 +31,10 @@ export class ItemListComponent implements OnInit {
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {  
       this.closeResult = `Closed with: ${result}`;  
       if (result === 'yes') {  
-        this.deleteProduct(itemId);  
+        this.deleteProduct(itemId); 
+        this._service.deleteItem(itemId).subscribe(response => {
+          console.log(response);
+        });
       }  
     }, (reason) => {  
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;  
@@ -52,3 +56,4 @@ export class ItemListComponent implements OnInit {
   }
 
 }
+
